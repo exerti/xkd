@@ -53,5 +53,5 @@ void showErrorAlert(String message, [StackTrace? stackTrace]) {
       stack: stackTrace ?? StackTrace.current,
     ),
   );
-  debugPrint('⚠️ $message');
+  XKDLog.error(message);
 }
