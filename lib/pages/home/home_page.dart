@@ -52,21 +52,22 @@ class _HomePageView extends StatelessWidget {
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                      
+
                       // 显示计数器
                       Text(
                         '计数器: ${state.counter}',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // 操作按钮
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: () => context.read<HomeCubit>().decrement(),
+                            onPressed: () =>
+                                context.read<HomeCubit>().decrement(),
                             child: const Text('-'),
                           ),
                           const SizedBox(width: 20),
@@ -76,32 +77,36 @@ class _HomePageView extends StatelessWidget {
                           ),
                           const SizedBox(width: 20),
                           ElevatedButton(
-                            onPressed: () => context.read<HomeCubit>().increment(),
+                            onPressed: () =>
+                                context.read<HomeCubit>().increment(),
                             child: const Text('+'),
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // 加载数据按钮
                       ElevatedButton(
                         onPressed: () => context.read<HomeCubit>().loadData(),
                         child: const Text('加载数据'),
                       ),
-                      
+
                       const SizedBox(height: 40),
-                      
+
                       // 跳转到用户页面（使用 GetX 路由）
                       ElevatedButton(
                         onPressed: () {
-                          Get.toNamed(AppRoutes.user);
+                          Get.toNamed(
+                            AppRoutes.user,
+                            arguments: {"projectId": 106},
+                          );
                         },
                         child: const Text('跳转到用户页面'),
                       ),
-                      
+
                       const SizedBox(height: 10),
-                      
+
                       // 跳转到示例页面（使用 RouterPage 基类）
                       ElevatedButton(
                         onPressed: () {
@@ -124,4 +129,3 @@ class _HomePageView extends StatelessWidget {
     );
   }
 }
-
