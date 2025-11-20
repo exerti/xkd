@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>BUGLY_APPID</key>
+	<string>1472c88a03</string>
 </dict>
 </plist>

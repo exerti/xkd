@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bugly/flutter_bugly.dart';
 import 'package:get/get.dart';
+import 'package:xkd/utils/xkd_log.dart';
+
+import 'config/buggly.config.dart';
 import 'routes/app_routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  FlutterBugly.postCatchedException(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    _configureImageCache();
+    _setupErrorHandling();
+    await BuglyConfig.init();
+    runApp(const MyApp());
+  });
+}
+
+void _configureImageCache() {
+  PaintingBinding.instance.imageCache.maximumSize = 500; //最多500张
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20; //最大50M
+}
+
+void _setupErrorHandling() {
+  FlutterError.onError = (details) async {
+    await BuglyConfig.handleException(details.exception, details.stack);
+  };
+
+  WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
+    BuglyConfig.handleException(error, stack);
+    return true;
+  };
 }
 
 class MyApp extends StatelessWidget {
@@ -24,6 +50,7 @@ class MyApp extends StatelessWidget {
       defaultTransition: Transition.rightToLeft,
       // 路由配置
       getPages: AppRoutes.routes,
+      enableLog: false,
       // 路由切换日志
       routingCallback: _logRouteChange,
     );
@@ -35,10 +62,9 @@ void _logRouteChange(Routing? routing) {
 
   final buffer = StringBuffer()
     ..writeln('--- Route Change ---')
-    ..writeln('From: ${routing.previous ?? 'unknown'}')
-    ..writeln('To: ${routing.current ?? 'unknown'}')
+    ..writeln('From: ${routing.previous}')
+    ..writeln('To: ${routing.current}')
     ..writeln('Action: ${routing.isBack == true ? 'pop/back' : 'push'}')
     ..writeln('Arguments: ${routing.args ?? '无'}');
-
-  debugPrint(buffer.toString());
+  XKDLog.info(buffer.toString());
 }
