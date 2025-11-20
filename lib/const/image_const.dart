@@ -1,1 +1,3 @@
-class XKDResource {}
+class XKDResource {
+  String packagePath= 'assets/images/';
+}
