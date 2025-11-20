@@ -16,8 +16,11 @@ A new Flutter project.
 - 资源在assets中添加，在 image_const  中 添加 XKDResource 「
   static XXXX_XXX_XX = "/path"；
  」
-- 资源图使用3x的图片，wepb格式
+- 资源图使用@3x的图片，wepb格式
 - 如果有gif，lottie 使用 flutter的lottie 或者gifView 相关的库
 - 页面统一有xxxx_page.dart,xxxx_cubit.dart,xxxx_state.dart 构成 xxxx 是文件名，小驼峰
+
+- 日志统一使用XKDLog进行输出
+-
 
  

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:xkd/app/app_cubit.dart';
+
+import '../../routes/app_routes.dart';
 import 'home_cubit.dart';
 import 'home_state.dart';
-import '../../routes/app_routes.dart';
 
 /// Home 页面
 /// 使用 BLoC 的 Cubit 和 State 进行状态管理
@@ -37,6 +39,72 @@ class _HomePageView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                BlocBuilder<AppCubit, AppState>(
+                  builder: (context, appState) {
+                    final lastLogin = appState.lastLoginAt;
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              appState.isLoggedIn
+                                  ? '已登录：${appState.user?.name ?? "-"}'
+                                  : '当前未登录',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Token: ${appState.authToken ?? "-"}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            if (lastLogin != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                '最近登录：${lastLogin.toLocal()}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                            if (appState.errorMessage != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                appState.errorMessage!,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ],
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: appState.isLoading
+                                  ? null
+                                  : () {
+                                      final appCubit =
+                                          context.read<AppCubit>();
+                                      if (appState.isLoggedIn) {
+                                        appCubit.logout();
+                                      } else {
+                                        appCubit.login(
+                                          userId: 'user-${DateTime.now().millisecondsSinceEpoch}',
+                                          userName: '演示用户',
+                                          email: 'demo@example.com',
+                                          token:
+                                              'token-${DateTime.now().millisecondsSinceEpoch}',
+                                        );
+                                      }
+                                    },
+                              child: Text(
+                                appState.isLoggedIn ? '退出登录' : '模拟登录',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 // 显示加载状态
                 if (state.isLoading)
                   const CircularProgressIndicator()

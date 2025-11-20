@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart'
+    as get_transition;
 import 'package:xkd/utils/xkd_log.dart';
 
+import 'app/app_cubit.dart';
 import 'config/buggly.config.dart';
 import 'routes/app_routes.dart';
 
@@ -12,7 +16,12 @@ void main() {
     _configureImageCache();
     _setupErrorHandling();
     await BuglyConfig.init();
-    runApp(const MyApp());
+    runApp(
+      BlocProvider(
+        create: (_) => AppCubit()..initialize(),
+        child: const MyApp(),
+      ),
+    );
   });
 }
 
@@ -47,7 +56,7 @@ class MyApp extends StatelessWidget {
       // 初始路由
       initialRoute: AppRoutes.home,
       // 去掉 GetX 右滑切换时的黑边，使用纯右滑转场
-      defaultTransition: Transition.rightToLeft,
+      defaultTransition: get_transition.Transition.rightToLeft,
       // 路由配置
       getPages: AppRoutes.routes,
       enableLog: false,
